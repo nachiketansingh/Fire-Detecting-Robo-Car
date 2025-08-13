@@ -6,7 +6,7 @@ It is designed to detect fire 🔥 and automatically extinguish it with a water�
 Component that i have used
 👇👇
 1. Arduino Nano – controlling all actions performed by a car.
-2. Flame Sensors – Detect the presence and direction of fire.
+2. 3 Flame Sensors – Detect the presence and direction of fire.
 3. Motor Driver (L298N) – Controls the speed and direction of the DC motors .
 4. Servo Motor – it will sprinkle the water in all the direction where fire is. 
 5. Water Pump – Sprays water to extinguish the detected fire.
