@@ -1,0 +1,182 @@
+#include <Servo.h>
+
+Servo myServo;
+
+int servpin=12;
+int servotime=5;
+int servoangle=150;
+int x=0;
+int RelayPin=7;
+
+const int ENA = 11;
+const int IN1 = 10;
+const int IN2 = 9;
+
+// ===== Motor B (Right side - 2 motors wired in parallel) =====
+const int ENB = 3;
+const int IN3 = 6;
+const int IN4 = 5;
+
+// ===== Speed settings =====
+int speedforward = 50;
+int speedbackward = 50;
+
+const int smokeSensorPin1 = A3; 
+const int smokeSensorPin2 = A0;
+const int smokeSensorPin3 = A2;
+
+int sensorValue1 = 60;
+int sensorValue2 = 60;
+int sensorValue3 = 60;
+
+void setup() {
+  Serial.begin(9600);
+
+//////////////////////////////////////// Servo code start
+
+  myServo.attach(servpin);  // Connect signal pin to D9
+  myServo.write(servoangle);  // Center position
+  delay(servotime);
+
+//////////////////////////////////////// Servo code End
+
+
+  pinMode(ENA, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+
+  pinMode(ENB, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+
+  pinMode(smokeSensorPin1, INPUT);
+  pinMode(smokeSensorPin2, INPUT);
+
+  pinMode(RelayPin, OUTPUT);
+}
+
+void loop() {
+  sensorValue1 = analogRead(smokeSensorPin1); // Read sensor 1
+  sensorValue2 = analogRead(smokeSensorPin2); // Read sensor 2
+  sensorValue3 = analogRead(smokeSensorPin3);
+
+  if (sensorValue1 > 400 && sensorValue2 > 400&& sensorValue3 < 400&& sensorValue3 > 40){
+    digitalWrite(RelayPin,HIGH);
+    moveforward();
+  }
+
+  else if (sensorValue1 < 400) {
+    digitalWrite(RelayPin,HIGH);
+    turnLeft();
+  }
+
+  else if (sensorValue2 < 400) {
+    digitalWrite(RelayPin,HIGH);
+    turnRight();
+  }
+
+  else if (sensorValue3 < 45) {
+  int x=1;
+    stopthecar();
+  
+    // delay(120);
+    
+    // Sweep servo
+    for (int angle = 140; angle >= 40; angle--) {
+      myServo.write(angle);
+      delay(servotime);
+    }
+    for (int angle = 40; angle <= 140; angle++) {
+      myServo.write(angle);
+      delay(servotime);
+    }
+while(x=1){
+  digitalWrite(RelayPin,LOW);
+  }
+  }
+
+  else if (sensorValue1 > 400 && sensorValue2 > 400 && sensorValue3 > 400) {
+
+    // Car will stop bcz there is no fire.
+    digitalWrite(RelayPin,HIGH);
+    stopthecar();
+  
+}
+
+  // Serial.print("Left Sensor ");
+  // Serial.print(sensorValue1);
+  // if (sensorValue1 < 400) {
+  //   Serial.print(" 🔥");
+  // } else {
+  //   Serial.print(" ✅");
+  // }
+
+  // Serial.print(" || ");
+
+  // Serial.print("Middle Sensor ");
+  // Serial.print(sensorValue3);
+  // if (sensorValue3 < 400) {
+  //   Serial.print(" 🔥");
+  //   }
+  // else {
+  //   Serial.print(" ✅");
+  // }
+
+
+  // Serial.print(" || ");
+
+  //   Serial.print("Right Sensor ");
+  //   Serial.print(sensorValue2);
+  //   if (sensorValue2 < 400) {
+  //     Serial.println(" 🔥");
+  //   } else {
+  //     Serial.println(" ✅");
+  //   }
+  // delay(10);
+
+}
+
+//FUNCTION FUNCTION FUNCTION FUNCTION FUNCTION FUNCTION FUNCTION
+
+void moveforward(){
+
+		digitalWrite(IN1, LOW);
+    digitalWrite(IN2, HIGH);
+    analogWrite(ENA, speedforward);
+    digitalWrite(IN3, HIGH);
+    digitalWrite(IN4, LOW);
+    analogWrite(ENB, speedforward);
+
+}
+
+void turnLeft(){
+
+    digitalWrite(IN1, LOW);
+    digitalWrite(IN2, HIGH);
+    analogWrite(ENA, speedbackward);
+    digitalWrite(IN3, LOW);
+    digitalWrite(IN4, HIGH);
+    analogWrite(ENB, speedforward);
+
+}
+
+void turnRight(){
+
+    digitalWrite(IN1, HIGH);
+    digitalWrite(IN2, LOW);
+    analogWrite(ENA, speedforward);
+    digitalWrite(IN3, HIGH);
+    digitalWrite(IN4, LOW);
+    analogWrite(ENB, speedbackward);
+}
+
+
+void stopthecar(){
+
+	digitalWrite(IN1, LOW); 
+	digitalWrite(IN2, LOW); 
+	analogWrite(ENA, 0);
+  digitalWrite(IN3, LOW); 
+  digitalWrite(IN4, LOW); 
+  analogWrite(ENB, 0);
+}
