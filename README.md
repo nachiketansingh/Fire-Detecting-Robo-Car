@@ -1,4 +1,4 @@
-# Fire-Detecting-Robo-Car
+# Fire Detecting Robo Car
 
 This is my Fire Detecting RoboCar 
 It is designed to detect fire 🔥 and automatically extinguish it with a water💧 which is mounted on car.
